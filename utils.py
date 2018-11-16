@@ -81,15 +81,15 @@ def read_stata_dict(dct_file, **options):
     return dct
 
 
-def read_stata(dirname):
+def read_stata(dct_name, dat_name, **options):
     """Reads Stata files from the given directory.
 
     dirname: string
 
     returns: DataFrame
     """
-    dct = read_stata_dict(dirname + '/GSS.dct')
-    df = dct.read_fixed_width(dirname + '/GSS.dat')
+    dct = read_stata_dict(dct_name)
+    df = dct.read_fixed_width(dat_name, **options)
     return df
 
 
