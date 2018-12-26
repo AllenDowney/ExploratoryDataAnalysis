@@ -26,26 +26,17 @@ def underride(d, **options):
     return d
 
 
-
-
 class Pmf(pd.Series):
-
-    @staticmethod
-    def from_seq(seq):
-        xs, ps = np.unique(seq, return_counts=True)
-        ps = ps / np.sum(ps)
-        return Pmf(ps, index=xs)
-
-    @staticmethod
-    def from_map(d):
-        pmf = Pmf(d)
-        pmf.sort()
-        pmf.normalize()
-        return pmf
+    
+    def __init__(self, seq, name='Pmf', normalize=True):
+        series = pd.Series(seq).value_counts().sort_index()
+        super().__init__(series, name=name)
+        if normalize:
+            self.normalize()
 
     @property
-    def xs(self):
-        return self.index
+    def qs(self):
+        return self.index.values
 
     @property
     def ps(self):
@@ -57,13 +48,12 @@ class Pmf(pd.Series):
     def normalize(self):
         self /= self.sum()
 
-    def sort(self):
-        self.sort_index(inplace=True)
-
     def bar(self, **options):
+        underride(options, label=self.name)
         plt.bar(self.index, self.values, **options)
 
     def plot(self, **options):
+        underride(options, label=self.name)
         plt.plot(self.index, self.values, **options)
 
 
@@ -72,15 +62,9 @@ from scipy.interpolate import interp1d
 
 class Cdf(pd.Series):
 
-    @staticmethod
-    def from_seq(seq):
-        pmf = Pmf.from_seq(seq)
-        return Cdf(pmf.cumsum())
-
-    @staticmethod
-    def from_map(d):
-        pmf = Pmf.from_map(d)
-        return Cdf(pmf.cumsum())
+    def __init__(self, seq, name='Cdf'):
+        pmf = Pmf(seq)
+        super().__init__(pmf.cumsum(), name=name)
 
     @property
     def qs(self):
@@ -93,18 +77,18 @@ class Cdf(pd.Series):
     @property
     def forward(self):
         return interp1d(self.qs, self.ps,
-                          kind='previous',
-                          assume_sorted=True,
-                          bounds_error=False,
-                          fill_value=(0,1))
+                        kind='previous',
+                        assume_sorted=True,
+                        bounds_error=False,
+                        fill_value=(0,1))
 
     @property
     def inverse(self):
         return interp1d(self.ps, self.qs,
-                          kind='next',
-                          assume_sorted=True,
-                          bounds_error=False,
-                          fill_value=(self.qs[0], np.nan))
+                        kind='next',
+                        assume_sorted=True,
+                        bounds_error=False,
+                        fill_value=(self.qs[0], np.nan))
 
     def __call__(self, qs):
         return self.forward(qs)
@@ -116,8 +100,9 @@ class Cdf(pd.Series):
         return self.inverse(percentile_ranks / 100)
 
     def step(self, **options):
-        underride(options, where='post')
+        underride(options, label=self.name, where='post')
         plt.step(self.index, self.values, **options)
 
     def plot(self, **options):
+        underride(options, label=self.name)
         plt.plot(self.index, self.values, **options)
