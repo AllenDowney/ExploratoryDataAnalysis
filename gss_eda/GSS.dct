@@ -100,4 +100,8 @@ infile dictionary {
  _column(1961)    numeric                            COMPUSE   %20f  "R use computer"
  _column(1981)    numeric                           DATABANK   %20f  "Computer data threat to individual privacy"
  _column(2001)    numeric                             WTSSNR   %20f  "Weight variable"
+ _column(2021)    numeric                             SPKRAC   %20f  "Allow racist to speak"
+ _column(2041)    numeric                             SPKCOM   %20f  "Allow communist to speak"
+ _column(2061)    numeric                             SPKMIL   %20f  "Allow militarist to speak"
+ _column(2081)    numeric                            SPKMSLM   %20f  "Allow muslim clergymen preaching hatred of the us"
 }
