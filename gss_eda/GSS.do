@@ -102,6 +102,10 @@
       compuse  1961 - 1980
       databank 1981 - 2000
       wtssnr   2001 - 2020
+      spkrac   2021 - 2040
+      spkcom   2041 - 2060
+      spkmil   2061 - 2080
+      spkmslm  2081 - 2100
 using GSS.dat;
 
 label variable year     "Gss year for this respondent                       ";
@@ -205,6 +209,10 @@ label variable adults   "Household members 18 yrs and older";
 label variable compuse  "R use computer";
 label variable databank "Computer data threat to individual privacy";
 label variable wtssnr   "Weight variable";
+label variable spkrac   "Allow racist to speak";
+label variable spkcom   "Allow communist to speak";
+label variable spkmil   "Allow militarist to speak";
+label variable spkmslm  "Allow muslim clergymen preaching hatred of the us";
 
 
 label define gsp001x
@@ -993,6 +1001,34 @@ label define gsp097x
    1        "Very serious threat"
    0        "Not applicable"
 ;
+label define gsp098x
+   9        "No answer"
+   8        "Don't know"
+   2        "Not allowed"
+   1        "Allowed"
+   0        "Not applicable"
+;
+label define gsp099x
+   9        "No answer"
+   8        "Don't know"
+   2        "Not allowed"
+   1        "Allowed"
+   0        "Not applicable"
+;
+label define gsp100x
+   9        "No answer"
+   8        "Don't know"
+   2        "Not allowed"
+   1        "Allowed"
+   0        "Not applicable"
+;
+label define gsp101x
+   9        "No answer"
+   8        "Dont know"
+   2        "Not allowed"
+   1        "Yes, allowed"
+   0        "Not applicable"
+;
 
 
 label values agewed   gsp001x;
@@ -1092,5 +1128,9 @@ label values ballot   gsp094x;
 label values adults   gsp095x;
 label values compuse  gsp096x;
 label values databank gsp097x;
+label values spkrac   gsp098x;
+label values spkcom   gsp099x;
+label values spkmil   gsp100x;
+label values spkmslm  gsp101x;
 
 
