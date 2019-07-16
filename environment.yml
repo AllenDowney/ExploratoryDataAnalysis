@@ -1,0 +1,18 @@
+name: ExploratoryDataAnalysis
+
+dependencies:
+  - python=3.7
+  - jupyter
+  - numpy
+  - matplotlib
+  - seaborn
+  - pandas
+  - pytables
+  - scipy
+  - scikit-learn
+  - pip
+  - pip:
+    - empyrical-dist
+
+
+
