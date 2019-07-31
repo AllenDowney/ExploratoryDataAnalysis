@@ -12,7 +12,8 @@ dependencies:
   - scikit-learn
   - pip
   - pip:
-    - empyrical-dist
+    - empiricaldist
+    
 
 
 
