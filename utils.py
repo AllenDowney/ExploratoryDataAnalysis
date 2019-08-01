@@ -155,7 +155,23 @@ def values(df, varname):
     """
     return df[varname].value_counts().sort_index()
 
+def count_by_year(gss, varname):
+    """Groups by category and year and counts.
 
+    gss: DataFrame
+    varname: string variable to group by
+
+    returns: DataFrame with one row per year, one column per category.
+    """
+    grouped = gss.groupby([varname, 'year'])
+    count = grouped[varname].count().unstack(level=0)
+
+    # note: the following is not ideal, because it does not
+    # distinguish 0 from NA, but in this dataset the only
+    # zeros are during years when the question was not asked.
+    count = count.replace(0, np.nan).dropna()
+    return count
+    
 def fill_missing(df, varname, badvals=[98, 99]):
     """Fill missing data with random values.
 
@@ -240,3 +256,49 @@ def legend(**options):
     handles, labels = ax.get_legend_handles_labels()
     #TODO: don't draw if there are none
     ax.legend(handles, labels, **options)
+
+from statsmodels.nonparametric.smoothers_lowess import lowess
+
+def make_lowess(series):
+    """Use LOWESS to compute a smooth line.
+
+    series: pd.Series
+
+    returns: pd.Series
+    """
+    endog = series.values
+    exog = series.index.values
+
+    smooth = lowess(endog, exog)
+    index, data = np.transpose(smooth)
+
+    return pd.Series(data, index=index)
+
+def plot_series_lowess(series, color):
+    """Plots a series of data points and a smooth line.
+
+    series: pd.Series
+    color: string or tuple
+    """
+    series.plot(lw=0, marker='o', color=color, alpha=0.5)
+    smooth = make_lowess(series)
+    smooth.plot(label='_', color=color)
+
+def plot_columns_lowess(df, columns, colors):
+    """Plot the columns in a DataFrame.
+
+    df: pd.DataFrame
+    columns: list of column names, in the desired order
+    colors: mapping from column names to colors
+    """
+    for col in columns:
+        series = df[col]
+        plot_series_lowess(series, colors[col])
+
+def anchor_legend(x, y):
+    """Put the legend at the given locationself.
+
+    x: axis coordinate
+    y: axis coordinate
+    """
+    plt.legend(bbox_to_anchor=(x, y), loc='upper left', ncol=1)
